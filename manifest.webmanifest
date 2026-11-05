@@ -1,0 +1,11 @@
+{
+  "name": "論文本棚",
+  "short_name": "論文本棚",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f2f5fa",
+  "theme_color": "#3b6ea8",
+  "icons": [
+    { "src": "./apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
