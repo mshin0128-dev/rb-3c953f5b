@@ -12,7 +12,7 @@
 })();
 </script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#3b6ea8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -45,12 +45,14 @@ html, body {
   background: var(--bg); color: var(--text);
   font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
   -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
 }
 
 input, textarea, select, button, img, canvas, table {
   max-width: 100%; min-width: 0; font-family: inherit; color: inherit;
 }
 input, textarea, select, button { font-size: 16px; }
+button, a, input, select, textarea, label, [role="button"] { touch-action: manipulation; }
 
 #app { display: flex; flex-direction: column; height: 100vh; min-width: 0; }
 
@@ -381,7 +383,7 @@ main.view[hidden] { display: none; }
         </div>
       </div>
 
-      <div class="footer-ver">論文本棚 v2026.11.06a</div>
+      <div class="footer-ver">論文本棚 v2026.11.12a</div>
     </div>
   </main>
 
@@ -480,6 +482,33 @@ main.view[hidden] { display: none; }
 
 <div class="toast" id="toast"></div>
 
+<script>
+(function(){
+  function isFormField(el) {
+    while (el) {
+      if (el.isContentEditable) return true;
+      var tag = el.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return true;
+      el = el.parentElement;
+    }
+    return false;
+  }
+  document.addEventListener('dblclick', function(e){
+    if (isFormField(e.target)) return;
+    e.preventDefault();
+  }, { passive: false });
+
+  var lastTouchEnd = 0;
+  document.addEventListener('touchend', function(e){
+    if (isFormField(e.target)) return;
+    var now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="./app.js"></script>
 </body>
