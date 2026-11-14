@@ -127,17 +127,36 @@ document.querySelectorAll('[data-close]').forEach((btn) => {
 
 /* ---------- View switching ---------- */
 const views = ['shelf', 'reader', 'settings'];
+let lastMainView = 'shelf';
+function updateSettingsBtns(name) {
+  document.querySelectorAll('.header-settings-btn').forEach((b) => {
+    b.setAttribute('aria-pressed', name === 'settings' ? 'true' : 'false');
+  });
+}
 function showView(name) {
+  if (name !== 'settings') lastMainView = name;
   views.forEach((v) => {
     document.getElementById('view-' + v).hidden = (v !== name);
   });
   document.querySelectorAll('.navbtn').forEach((b) => {
-    b.classList.toggle('active', b.getAttribute('data-view') === name);
+    const t = b.getAttribute('data-view');
+    b.classList.toggle('active', name === 'settings' ? t === lastMainView : t === name);
   });
+  updateSettingsBtns(name);
   if (name === 'settings') refreshSettingsView();
 }
 document.querySelectorAll('.navbtn').forEach((b) => {
   b.addEventListener('click', () => showView(b.getAttribute('data-view')));
+});
+document.querySelectorAll('.header-settings-btn').forEach((b) => {
+  b.addEventListener('click', () => {
+    const settingsOpen = !document.getElementById('view-settings').hidden;
+    if (settingsOpen) showView(lastMainView || 'shelf');
+    else showView('settings');
+  });
+});
+document.getElementById('btn-settings-back').addEventListener('click', () => {
+  showView(lastMainView || 'shelf');
 });
 
 /* =========================================================
